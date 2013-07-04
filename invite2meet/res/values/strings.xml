@@ -3,6 +3,15 @@
 
     <string name="app_name">invite2meet</string>
     <string name="action_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="db_name">invite2meet</string>
+    
+    <!-- Fragment titles -->
+    <string name="frag_who_title">Who?</string>
+    <string name="frag_when_title">When?</string>
+    <string name="frag_where_title">Where?</string>
+    
+    <!-- Account settings -->
+    
+
 
 </resources>

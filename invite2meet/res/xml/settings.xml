@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- @author based on: wsn -->
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+    <!--
+    <PreferenceCategory 
+        android:key="@string/remoteDBKey" 
+        android:title="@string/remoteDBTitle">
+        
+        <EditTextPreference 
+            android:title="@string/usernamePreferenceTitle" 
+            android:key="@string/usernamePreferenceKey" 
+            android:defaultValue="@string/usernameDefaultPreference"/>
+        
+    	<EditTextPreference 
+    	    android:title="@string/serverAddressPreferenceTitle" 
+    	    android:defaultValue="@string/serverAddressDefaultPreference" 
+    	    android:key="@string/serverAddressPreferenceKey"/>
+	</PreferenceCategory>
+	-->
+	
+        <PreferenceCategory 
+        android:key="settings_account" 
+        android:title="Your Account">
+        
+        <EditTextPreference 
+            android:title="Username" 
+            android:key="settings_account_username" 
+            android:defaultValue="username"/>
+        
+    	<EditTextPreference 
+    	    android:title="Server address" 
+    	    android:key="settings_account_server"
+    	    android:defaultValue="http://www.someaddress.org"/>
+	</PreferenceCategory>
+</PreferenceScreen>
