@@ -20,17 +20,17 @@ import android.widget.TextView;
  * @author based on: wsn, WiFun5
  *
  */
-public class WhoListViewAdapter extends BaseAdapter {
+public class FriendsListViewAdapter extends BaseAdapter {
 
 	private Context context;
 	private ListView listView;
 	private List<Friend> friends;
 
-	public WhoListViewAdapter(Context context, ListView listView) {
+	public FriendsListViewAdapter(Context context, ListView listView) {
 		this(context, listView, new LinkedList<Friend>());
 	}
 
-	public WhoListViewAdapter(Context context, ListView listView, List<Friend> friends) {
+	public FriendsListViewAdapter(Context context, ListView listView, List<Friend> friends) {
 		this.context = context;
 		this.listView = listView;
 		this.friends = friends;

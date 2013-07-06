@@ -20,17 +20,17 @@ import android.widget.TextView;
  * @author based on: wsn, WiFun5
  *
  */
-public class WhereListViewAdapter extends BaseAdapter {
+public class PlacesListViewAdapter extends BaseAdapter {
 
 	private Context context;
 	private ListView listView;
 	private List<Place> places;
 
-	public WhereListViewAdapter(Context context, ListView listView) {
+	public PlacesListViewAdapter(Context context, ListView listView) {
 		this(context, listView, new LinkedList<Place>());
 	}
 
-	public WhereListViewAdapter(Context context, ListView listView, List<Place> places) {
+	public PlacesListViewAdapter(Context context, ListView listView, List<Place> places) {
 		this.context = context;
 		this.listView = listView;
 		this.places = places;

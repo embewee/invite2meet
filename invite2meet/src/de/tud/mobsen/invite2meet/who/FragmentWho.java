@@ -5,7 +5,7 @@ import java.util.List;
 
 import de.tud.mobsen.invite2meet.R;
 import de.tud.mobsen.invite2meet.objects.Friend;
-import de.tud.mobsen.invite2meet.objects.WhoListViewAdapter;
+import de.tud.mobsen.invite2meet.objects.FriendsListViewAdapter;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -19,7 +19,7 @@ public class FragmentWho extends Fragment {
 		View fragView = inflater.inflate(R.layout.fragment_who, container, false);
 		
 		ListView friendsListView = (ListView) fragView.findViewById(R.id.fragwho_listview);
-		WhoListViewAdapter friendListViewAdapter = new WhoListViewAdapter(getActivity(), friendsListView, getFriends()); 		
+		FriendsListViewAdapter friendListViewAdapter = new FriendsListViewAdapter(getActivity(), friendsListView, getFriends()); 		
 		friendsListView.setAdapter(friendListViewAdapter);
 		
 		return fragView;

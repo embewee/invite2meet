@@ -6,8 +6,8 @@ public class Place {
 	private String name;
 	private String photoUri;
 	private String timestamp;
-	private long latitude;
-	private long longitude;
+	private double latitude;
+	private double longitude;
 	private int timesUsed;
 
 	/**
@@ -22,12 +22,32 @@ public class Place {
 		
 		this.photoUri = null;
 		this.timestamp = null;
-		this.latitude = Long.MIN_VALUE;
-		this.longitude = Long.MIN_VALUE;
+		this.latitude = Double.MIN_VALUE;
+		this.longitude = Double.MIN_VALUE;
 		this.timesUsed = -1;
 	}
 	
-	public Place(int id, String name, String photoUri, String timestamp, long latitude, long longitude, int timesUsed) {
+	/**
+	 * 
+	 * @param name
+	 * @param photoUri
+	 * @param timestamp
+	 * @param latitude
+	 * @param longitude
+	 */
+	public Place(String name, String photoUri, String timestamp, double latitude, double longitude) {
+		this.systemEntry = false;
+		
+		this.id = Integer.MIN_VALUE;
+		this.name = name;
+		this.photoUri = photoUri;
+		this.timestamp = timestamp;
+		this.latitude = latitude;
+		this.longitude = longitude;
+		this.timesUsed = 0;
+	}
+	
+	public Place(int id, String name, String photoUri, String timestamp, double latitude, double longitude, int timesUsed) {
 		this.systemEntry = false;
 		
 		this.id = id;
@@ -75,19 +95,19 @@ public class Place {
 		this.timestamp = timestamp;
 	}
 
-	public long getLatitude() {
+	public double getLatitude() {
 		return latitude;
 	}
 
-	public void setLatitude(long latitude) {
+	public void setLatitude(double latitude) {
 		this.latitude = latitude;
 	}
 
-	public long getLongitude() {
+	public double getLongitude() {
 		return longitude;
 	}
 
-	public void setLongitude(long longitude) {
+	public void setLongitude(double longitude) {
 		this.longitude = longitude;
 	}
 
@@ -110,5 +130,12 @@ public class Place {
 		return name;
 	}
 	
+	@Override
+	public String toString() {
+		return "Place [systemEntry=" + systemEntry + ", id=" + id + ", name="
+				+ name + ", photoUri=" + photoUri + ", timestamp=" + timestamp
+				+ ", latitude=" + latitude + ", longitude=" + longitude
+				+ ", timesUsed=" + timesUsed + "]";
+	}
 
 }

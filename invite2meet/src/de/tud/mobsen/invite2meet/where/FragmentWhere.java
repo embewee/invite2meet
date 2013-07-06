@@ -1,45 +1,82 @@
 package de.tud.mobsen.invite2meet.where;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import de.tud.mobsen.invite2meet.R;
+import de.tud.mobsen.invite2meet.db.PlacesDbHelper;
 import de.tud.mobsen.invite2meet.objects.Place;
-import de.tud.mobsen.invite2meet.objects.WhereListViewAdapter;
+import de.tud.mobsen.invite2meet.objects.PlacesListViewAdapter;
 import android.app.Fragment;
+import android.app.ProgressDialog;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Toast;
 
 public class FragmentWhere extends Fragment {
+	
+	private PlacesListViewAdapter placesListViewAdapter;
+	ProgressDialog progressDialog;
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View fragView = inflater.inflate(R.layout.fragment_where, container, false);
 		
 		ListView friendsListView = (ListView) fragView.findViewById(R.id.fragwhere_listview);
-		WhereListViewAdapter whereListViewAdapter = new WhereListViewAdapter(getActivity(), friendsListView, getPlaces()); 		
-		friendsListView.setAdapter(whereListViewAdapter);
+		placesListViewAdapter = new PlacesListViewAdapter(getActivity(), friendsListView, new LinkedList<Place>()); 		
+		friendsListView.setAdapter(placesListViewAdapter);
+		getPlaces();
 		
 		return fragView;
 	}
 	
-	//TODO!
-	private List<Place> getPlaces() {
-		ArrayList<Place> places = new ArrayList<Place>();
-		
-		Place place1 = new Place(-1, "Here!");
-		Place place2 = new Place(1, "Mensaecke");
-		Place place3 = new Place(2, "Herrngartenbank");
-		Place place4 = new Place(3, "Geheimplatz");
-		
-		places.add(place1);
-		places.add(place2);
-		places.add(place3);
-		places.add(place4);
-		
-		return places;
+	private void getPlaces() {
+		progressDialog = ProgressDialog.show(getActivity(), "Loading places", "Please wait...", true);
+		new LoadPlacesDatabase().execute();
 	}
 	
+	/**
+	 * Member class used for selecting all database records.
+	 * @author based on: wsn
+	 */
+	private class LoadPlacesDatabase extends AsyncTask<Void, Void, List<Place>> {
+		protected List<Place> doInBackground(Void... params) {
+			List<Place> places = new LinkedList<Place>();
+			
+			/**
+			 * TODO: STEP 3 - ADD YOUR CODE HERE TO PROVIDE FUNCTIONALITY TO
+			 * LOAD RECORDS
+			 */
+			PlacesDbHelper databaseHelper = new PlacesDbHelper(getActivity());
+			SQLiteDatabase database = databaseHelper.getReadableDatabase();
+
+			// create and execute sql query
+			//String[] columns = new String[] { PlacesDbHelper.KEY_ID, PlacesDbHelper.KEY_NAME, PlacesDbHelper. };
+			String[] columns = null;
+			Cursor c = database.query(PlacesDbHelper.TABLE_NAME, columns, null, null, PlacesDbHelper.KEY_TIMES_USED, null, null);
+
+			// iterate over returned values.
+			c.moveToFirst();
+			for (int index = 0; index < c.getCount(); index++) {
+				Place p = new Place(c.getInt(0), c.getString(1), c.getString(2), c.getString(3), c.getDouble(4), c.getDouble(5), c.getInt(6));
+				places.add(p);
+				c.moveToNext();
+			}
+			database.close();
+			return places;
+		}
+
+		@Override
+		protected void onPostExecute(List<Place> list) {
+			//TODO: ADD TO LISTVIEW
+			placesListViewAdapter.setItems(list);
+			progressDialog.dismiss();
+			Toast.makeText(getActivity(), list.size() + " records loaded", Toast.LENGTH_SHORT).show();
+		}
+	}
 }

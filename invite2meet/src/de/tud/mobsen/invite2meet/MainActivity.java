@@ -52,17 +52,16 @@ public class MainActivity extends Activity {
 		switch (item.getItemId()) {
 		case R.id.action_friends:
 			getFragmentManager().beginTransaction().replace(R.id.fragment_content, new FriendsFragment()).commit();
-			break;
+			return true;
 		case R.id.action_places:
 			getFragmentManager().beginTransaction().replace(R.id.fragment_content, new PlacesFragment()).commit();
-			break;
+			return true;
 		case R.id.action_account:
 			getFragmentManager().beginTransaction().replace(R.id.fragment_content, new AccountSettingsFragment()).commit();
-			break;
+			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
-		return true;
 	}
 	
 	/**
@@ -83,35 +82,26 @@ public class MainActivity extends Activity {
 
 	/**
 	 * Member class for a Tab listener
-	 * 
+	 * @author based on: wsn
 	 */
 	private class TabListener implements ActionBar.TabListener {
-
 		private Fragment fragment;
 
-
 		public TabListener(Fragment fragment) {
-
 			this.fragment = fragment;
 		}
 
-
 		public void onTabSelected(Tab tab, FragmentTransaction ft) {
-
-			ft.add(R.id.fragment_content, fragment, fragment.getTag());
+			ft.replace(R.id.fragment_content, fragment, fragment.getTag());
 		}
 
-
 		public void onTabUnselected(Tab tab, FragmentTransaction ft) {
-
 			ft.remove(fragment);
 		}
 
-
 		public void onTabReselected(Tab tab, FragmentTransaction ft) {
 
-			// nothing to do
+			ft.replace(R.id.fragment_content, fragment, fragment.getTag());
 		}
 	}
-
 }
