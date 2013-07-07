@@ -61,7 +61,7 @@ public class WhenListViewAdapter extends BaseAdapter {
 		}
 
 		When when = whens.get(position);
-		((TextView) view.findViewById(R.id.timestamp)).setText(when.getDisplayText());
+		((TextView) view.findViewById(R.id.listItem_text)).setText(when.getDisplayText());
 		//friend.setImage(view);
 
 		return view;

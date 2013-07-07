@@ -10,7 +10,7 @@
 
       <!-- TODO -->
       <ImageView
-          android:id="@+id/cloudItemImage"
+          android:id="@+id/listItemImage_image"
           android:contentDescription="PLACEHOLDER" 
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
@@ -18,7 +18,7 @@
           android:src="@drawable/placeholder" />
       
 	<TextView
-          android:id="@+id/timestamp"
+          android:id="@+id/listItemImage_text"
           android:gravity="center_horizontal"
           android:layout_width="wrap_content"
           android:layout_height="fill_parent"

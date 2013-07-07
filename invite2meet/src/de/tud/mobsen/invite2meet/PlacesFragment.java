@@ -81,28 +81,36 @@ public class PlacesFragment extends Fragment {
 	 * @author based on: wsn
 	 */
 	private class LoadPlacesDatabase extends AsyncTask<Void, Void, List<Place>> {
+
 		protected List<Place> doInBackground(Void... params) {
-			List<Place> places = new LinkedList<Place>();
-			
-			/**
-			 * TODO: STEP 3 - ADD YOUR CODE HERE TO PROVIDE FUNCTIONALITY TO
-			 * LOAD RECORDS
-			 */
 			PlacesDbHelper databaseHelper = new PlacesDbHelper(getActivity());
 			SQLiteDatabase database = databaseHelper.getReadableDatabase();
+			
+			List<Place> places = new LinkedList<Place>();
 
-			// create and execute sql query
-			//String[] columns = new String[] { PlacesDbHelper.KEY_ID, PlacesDbHelper.KEY_NAME, PlacesDbHelper. };
-			String[] columns = null;
-			Cursor c = database.query(PlacesDbHelper.TABLE_NAME, columns, null, null, PlacesDbHelper.KEY_TIMES_USED, null, null);
-
-			// iterate over returned values.
-			c.moveToFirst();
-			for (int index = 0; index < c.getCount(); index++) {
-				Place p = new Place(c.getInt(0), c.getString(1), c.getString(2), c.getString(3), c.getDouble(4), c.getDouble(5), c.getInt(6));
-				places.add(p);
-				c.moveToNext();
+			/** @author based on: wsn, http://stackoverflow.com/questions/1601151/how-do-i-check-in-sqlite-whether-a-table-exists (Stephen Quan)*/
+			Cursor cEmpty = database.rawQuery("SELECT COUNT(*) FROM sqlite_master WHERE type = ? AND name = ?", new String[] {"table", PlacesDbHelper.TABLE_NAME});
+			boolean empty = true;
+			if(cEmpty.moveToFirst()) {
+				int entries = cEmpty.getInt(0);
+				if(entries > 0) empty = false;
 			}
+			cEmpty.close();
+			
+			if(!empty) {			
+				// create and execute sql query
+				String[] columns = null;
+				Cursor c = database.query(PlacesDbHelper.TABLE_NAME, columns, null, null, PlacesDbHelper.KEY_TIMES_USED, null, null);
+	
+				// iterate over returned values.
+				c.moveToFirst();
+				for (int index = 0; index < c.getCount(); index++) {
+					Place p = new Place(c.getInt(0), c.getString(1), c.getString(2), c.getString(3), c.getDouble(4), c.getDouble(5), c.getInt(6));
+					places.add(p);
+					c.moveToNext();
+				}
+			}
+			
 			database.close();
 			return places;
 		}

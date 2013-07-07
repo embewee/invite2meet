@@ -60,18 +60,16 @@ public class FriendsListViewAdapter extends BaseAdapter {
 			view = vi.inflate(R.layout.list_item_check, null);
 		}
 
-		final CheckBox checkBox = ((CheckBox) view.findViewById(R.id.checkBox1));
+		final CheckBox checkBox = ((CheckBox) view.findViewById(R.id.listItemCheck_checkbox));
 		checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
 				listView.setItemChecked(position, checkBox.isChecked());
 			}
 		});
 
 		Friend friend = friends.get(position);
-		((TextView) view.findViewById(R.id.timestamp)).setText(friend.toString());
+		((TextView) view.findViewById(R.id.listItemCheck_text)).setText(friend.toString());
 		//friend.setImage(view);
 
 		return view;

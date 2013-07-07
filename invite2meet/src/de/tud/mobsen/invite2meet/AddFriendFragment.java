@@ -1,7 +1,11 @@
 package de.tud.mobsen.invite2meet;
 
+import de.tud.mobsen.invite2meet.db.FriendsDbHelper;
 import android.app.DialogFragment;
 import android.app.ProgressDialog;
+import android.content.ContentValues;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +13,7 @@ import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class AddFriendFragment extends DialogFragment {
 
@@ -46,5 +51,53 @@ public class AddFriendFragment extends DialogFragment {
 		friendsName = nameTextField.getEditableText().toString();
 		
 		//TODO: check for friend, perform remote steps, and retrieve information 
+		
+		
+		
+		
+		
+		
+		//@author based on: wsn
+		new SaveFriendToDatabase().execute();
+		
+		
+		
+		
+		
+		
+		
+	}
+	
+	//####################### SAVE TO DB #################################
+	
+	/**
+	 * Member class which is used for a background database save operation of
+	 * the current Wi-Fi scan results.
+	 * @author based on: wsn
+	 */
+	private class SaveFriendToDatabase extends AsyncTask<Void, Void, String> {
+		@Override
+		protected String doInBackground(Void... arg0) {
+			FriendsDbHelper databaseHelper = new FriendsDbHelper(getActivity());
+			SQLiteDatabase database = databaseHelper.getWritableDatabase();
+
+			ContentValues values = new ContentValues();
+			values.put(FriendsDbHelper.KEY_NAME, friendsName);
+			long rowId = database.insert(FriendsDbHelper.TABLE_NAME, null, values);
+			database.close();
+			
+			if(rowId < 0) {
+				return "Could not add friend";
+			} else {
+				return "Friend successfully added";
+			}
+		}
+		
+		@Override
+		protected void onPostExecute(String message) {
+			progressDialog.dismiss();
+			getDialog().dismiss();
+			Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+		}
 	}
 }

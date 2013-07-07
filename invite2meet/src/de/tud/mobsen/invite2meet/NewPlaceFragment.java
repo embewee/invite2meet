@@ -152,7 +152,7 @@ public class NewPlaceFragment extends DialogFragment {
 		    boolean deleted = imageFile.delete();
 		    Log.i(tag, "Deleted: " + deleted);
 		    
-		    Bitmap resized = Bitmap.createScaledBitmap(myBitmap, 250, 250, false);
+		    Bitmap resized = Bitmap.createScaledBitmap(myBitmap, 100, 100, false);
 		    
 		    picture.setImageBitmap(resized);
 		    
@@ -163,6 +163,8 @@ public class NewPlaceFragment extends DialogFragment {
             File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), Constants.APPNAME);
             String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.GERMAN).format(new Date());
             File mediaFile = new File(mediaStorageDir.getPath() + File.separator + "IMG_"+ timeStamp + ".jpg");
+            
+            imageFile = mediaFile;
             
             try {
             	mediaFile.createNewFile();
@@ -308,11 +310,15 @@ public class NewPlaceFragment extends DialogFragment {
 			values.put(PlacesDbHelper.KEY_PHOTO_URI, photoUri);
 			values.put(PlacesDbHelper.KEY_LONGITUDE, longitude);
 			values.put(PlacesDbHelper.KEY_LATITUDE, latitude);
-			database.insert(PlacesDbHelper.TABLE_NAME, null, values);
+			long rowId = database.insert(PlacesDbHelper.TABLE_NAME, null, values);
 
 			database.close();
 			
-			return "Place successfully saved";
+			if(rowId < 0) {
+				return "Could not save place";
+			} else {
+				return "Place successfully saved";
+			}
 		}
 		
 		@Override

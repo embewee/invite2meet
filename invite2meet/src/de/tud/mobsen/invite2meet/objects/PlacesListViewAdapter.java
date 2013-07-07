@@ -6,12 +6,15 @@ import java.util.List;
 import de.tud.mobsen.invite2meet.R;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -60,16 +63,13 @@ public class PlacesListViewAdapter extends BaseAdapter {
 			view = vi.inflate(R.layout.list_item_image, null);
 		}
 
-//TODO: IMAGE
-
-
-
 		Place place = places.get(position);
-		((TextView) view.findViewById(R.id.timestamp)).setText(place.getDisplayText());
-		//friend.setImage(view);
+		((TextView) view.findViewById(R.id.listItemImage_text)).setText(place.getDisplayText());
+		Bitmap bitmap = BitmapFactory.decodeFile(place.getPhotoUri());
+		ImageView imageView = (ImageView) view.findViewById(R.id.listItemImage_image);
+		imageView.setImageBitmap(bitmap);
 
 		return view;
-
 	}
 
 	public void setItems(List<Place> places) {
