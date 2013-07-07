@@ -66,8 +66,9 @@ public class PlacesListViewAdapter extends BaseAdapter {
 		Place place = places.get(position);
 		((TextView) view.findViewById(R.id.listItemImage_text)).setText(place.getDisplayText());
 		Bitmap bitmap = BitmapFactory.decodeFile(place.getPhotoUri());
+		Bitmap resized = Bitmap.createScaledBitmap(bitmap, 100, 100, false);
 		ImageView imageView = (ImageView) view.findViewById(R.id.listItemImage_image);
-		imageView.setImageBitmap(bitmap);
+		imageView.setImageBitmap(resized);
 
 		return view;
 	}

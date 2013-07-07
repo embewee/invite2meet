@@ -47,6 +47,8 @@ public class FragmentWhen extends Fragment {
 		whens.add(new When("five", "5 Min"));
 		whens.add(new When("ten", "10 Min"));
 		whens.add(new When("fifteen", "15 Min"));
+		whens.add(new When("twenty", "20 Min"));
+		whens.add(new When("thirty", "30 Min"));
 		whens.add(new When("choose", "Choose..."));
 		return whens;		
 	}

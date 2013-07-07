@@ -7,10 +7,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-
 import de.tud.mobsen.invite2meet.db.PlacesDbHelper;
-import de.tud.mobsen.invite2meet.objects.Place;
-
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.ProgressDialog;
@@ -42,8 +39,12 @@ import android.widget.Toast;
 public class NewPlaceFragment extends DialogFragment {
 
 	private final static String tag = "NewPlaceFragment";
+	private final static int CAPTURE_IMAGE_REQUEST_CODE = 100;
 	
-	private ProgressDialog progressDialog;
+	private ProgressDialog progressDialog;	
+	
+	private LocationManager locationManager;
+	private LocationListener locListener;
 	
 	private TextView txtLatitude;
 	private TextView txtLongitude;
@@ -89,7 +90,7 @@ public class NewPlaceFragment extends DialogFragment {
 		picture.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				onMakePicture();
+				takePicture();
 			}
 		});
 		
@@ -99,60 +100,51 @@ public class NewPlaceFragment extends DialogFragment {
 		return fragView;
 	}
 	
-	public void onMakePicture() {
-		takePicture();
-	}
-	
-	public void onSaveNewPlace() {
-		Log.i(tag, "SAVE");
-
-		//@author based on: wsn
-		SimpleDateFormat dateFormat = new SimpleDateFormat(PlacesDbHelper.DATE_FORMAT, Locale.GERMANY);
-		Date date = new Date();
+	/**
+	 * @author Based on: http://developer.android.com/guide/topics/media/camera.html
+	 */
+	private void takePicture() {
+		Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 		
-		timestamp = dateFormat.format(date);
-		name = nameTextField.getText().toString();
-		photoUri = imageFile.getAbsolutePath();
-
-		if(isPlaceValid()) {
-			//@author based on: wsn
-			progressDialog = ProgressDialog.show(getActivity(), "Saving to database", "Please wait...", true);
-			new SavePlaceToDatabase().execute();
-		} else {
-			Toast.makeText(getActivity(), "Place attributes not valid.", Toast.LENGTH_SHORT).show();
-		}
+		File file = getOutputMediaUri(); // create a file to save the image
+		imageFile = file;
+		Uri imageFileUri = Uri.fromFile(imageFile);
+		Log.i(tag, imageFileUri.toString());
+		intent.putExtra(MediaStore.EXTRA_OUTPUT, imageFileUri); // set the image file name
+		startActivityForResult(intent, CAPTURE_IMAGE_REQUEST_CODE);
 	}
 	
-	public boolean isPlaceValid() {
-		return ((name != null) &&
-				(!name.isEmpty()) &&
-				(latitude > Double.MIN_VALUE) &&
-				(longitude > Double.MIN_VALUE) &&
-				(photoUri != null) &&
-				(!photoUri.isEmpty()));
+	/**
+	 * @author Based on: http://developer.android.com/guide/topics/media/camera.html
+	 */
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+	    if (requestCode == CAPTURE_IMAGE_REQUEST_CODE) {
+	        if (resultCode == Activity.RESULT_OK) {
+	        	saveAndShowImage();
+	        	
+	        } else if (resultCode == Activity.RESULT_CANCELED) {
+	        	//Toast.makeText(getActivity(), "User cancelled action", Toast.LENGTH_SHORT).show();
+	        	
+	        } else {
+	        	Toast.makeText(getActivity(), "Could not take image", Toast.LENGTH_SHORT).show();
+	        }
+	    }
 	}
-	
-	
-	
-	
-	///////////###########################################################################
-	
-	
-	
 	
 	/**
 	 * @author Based on: http://stackoverflow.com/questions/4181774/show-image-view-from-file-path-in-android
 	 * @author Based on: http://stackoverflow.com/questions/16060143/android-take-photo-and-resize-it-before-saving-on-sd-card
 	 * @param view
 	 */
-	private void showImage(){
+	private void saveAndShowImage(){
 		if(imageFile.exists()){
 		    Bitmap myBitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
 		    
 		    boolean deleted = imageFile.delete();
 		    Log.i(tag, "Deleted: " + deleted);
 		    
-		    Bitmap resized = Bitmap.createScaledBitmap(myBitmap, 100, 100, false);
+		    Bitmap resized = Bitmap.createScaledBitmap(myBitmap, 300, 300, false); //TODO: SIZE!!!
 		    
 		    picture.setImageBitmap(resized);
 		    
@@ -172,32 +164,13 @@ public class NewPlaceFragment extends DialogFragment {
 	            fo.write(bytes.toByteArray());
 	            fo.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Toast.makeText(getActivity(), "Could not load image: I/O exception", Toast.LENGTH_SHORT).show();
 			}
+		} else {
+			Toast.makeText(getActivity(), "Could not load image: not found", Toast.LENGTH_SHORT).show();
 		}
 	}
 	
-
-	//####################### CAMERA #################################
-	//Camera related code based on: http://developer.android.com/guide/topics/media/camera.html
-	
-	private final static int CAPTURE_IMAGE_REQUEST_CODE = 100;
-	
-	/**
-	 * @author Based on: http://developer.android.com/guide/topics/media/camera.html
-	 */
-	private void takePicture() {
-		Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-		
-		File file = getOutputMediaUri(); // create a file to save the image
-		imageFile = file;
-		Uri imageFileUri = Uri.fromFile(imageFile);
-		Log.i(tag, imageFileUri.toString());
-		intent.putExtra(MediaStore.EXTRA_OUTPUT, imageFileUri); // set the image file name
-		startActivityForResult(intent, CAPTURE_IMAGE_REQUEST_CODE);
-	}
-
 	/**
 	 * Create a File for saving an image or video
 	 * @author Based on: http://developer.android.com/guide/topics/media/camera.html
@@ -226,38 +199,12 @@ public class NewPlaceFragment extends DialogFragment {
 	}
 	
 	/**
-	 * @author Based on: http://developer.android.com/guide/topics/media/camera.html
-	 */
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-	    if (requestCode == CAPTURE_IMAGE_REQUEST_CODE) {
-	        if (resultCode == Activity.RESULT_OK) {
-	        	Toast.makeText(getActivity(), "Took image: " + imageFile, Toast.LENGTH_SHORT).show();
-	        	
-	        	//TODO
-	        	showImage();
-	        	
-	        } else if (resultCode == Activity.RESULT_CANCELED) {
-	        	Toast.makeText(getActivity(), "User cancelled action.", Toast.LENGTH_SHORT).show();
-	        } else {
-	        	Toast.makeText(getActivity(), "Could not take image.", Toast.LENGTH_SHORT).show();
-	        }
-	    }
-	    
-	    
-	}
-	
-	
-
-	//####################### LOCATION #################################
-
-	/**
 	 * @author Based on: Wireless Sensor Networks Lab, WiFun6
 	 * @author Based on: http://stackoverflow.com/questions/7979230/how-to-read-location-only-once-with-locationmanager-gps-and-network-provider-a
 	 */
 	private void getLocation() {
-		LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-		LocationListener locListener = new LocationListener() {
+		locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+		locListener = new LocationListener() {
 
 			@Override
 			public void onLocationChanged(Location location) {
@@ -287,10 +234,41 @@ public class NewPlaceFragment extends DialogFragment {
 		txtLongitude.setText(Double.toString(location.getLongitude()));
 		
 		//TODO: warten, bis beste Lokation gefunden wurde
-		
 	}
 	
-	//####################### SAVE TO DB #################################
+	/**
+	 * @author based on: wsn
+	 */
+	public void onSaveNewPlace() {
+		Log.i(tag, "SAVE");
+
+		//@author based on: wsn
+		SimpleDateFormat dateFormat = new SimpleDateFormat(PlacesDbHelper.DATE_FORMAT, Locale.GERMANY);
+		Date date = new Date();
+		
+		timestamp = dateFormat.format(date);
+		name = nameTextField.getText().toString();
+		photoUri = imageFile.getAbsolutePath();
+
+		if(isPlaceValid()) {
+			//@author based on: wsn
+			progressDialog = ProgressDialog.show(getActivity(), "Saving to database", "Please wait...", true);
+			new SavePlaceToDatabase().execute();
+			locationManager.removeUpdates(locListener);	
+			
+		} else {
+			Toast.makeText(getActivity(), "Pictured and/or location missing", Toast.LENGTH_SHORT).show();
+		}
+	}
+	
+	public boolean isPlaceValid() {
+		return ((name != null) &&
+				(!name.isEmpty()) &&
+				(latitude > Double.MIN_VALUE) &&
+				(longitude > Double.MIN_VALUE) &&
+				(photoUri != null) &&
+				(!photoUri.isEmpty()));
+	}
 	
 	/**
 	 * Member class which is used for a background database save operation of
@@ -312,6 +290,8 @@ public class NewPlaceFragment extends DialogFragment {
 			values.put(PlacesDbHelper.KEY_LATITUDE, latitude);
 			long rowId = database.insert(PlacesDbHelper.TABLE_NAME, null, values);
 
+			Log.i(tag, "RowId: " + Long.toString(rowId));
+			
 			database.close();
 			
 			if(rowId < 0) {

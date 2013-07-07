@@ -66,6 +66,8 @@ public class FragmentWhere extends Fragment {
 				String[] columns = null;
 				Cursor c = database.query(PlacesDbHelper.TABLE_NAME, columns, null, null, PlacesDbHelper.KEY_TIMES_USED, null, null);
 	
+				int rows = c.getCount();
+				
 				// iterate over returned values.				
 				c.moveToFirst();
 				for (int index = 0; index < c.getCount(); index++) {
