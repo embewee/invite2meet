@@ -5,6 +5,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+/**
+ * @author based on: wsn, WiFun5
+ */
 public class FriendsDbHelper extends SQLiteOpenHelper {
 	public static final int DATABASE_VERSION = 1;
 	public static final String DATABASE_NAME = "invite2meet";

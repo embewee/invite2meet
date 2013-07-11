@@ -257,15 +257,19 @@ public class NewPlaceFragment extends DialogFragment {
 			locationManager.removeUpdates(locListener);	
 			
 		} else {
-			Toast.makeText(getActivity(), "Pictured and/or location missing", Toast.LENGTH_SHORT).show();
+			Toast.makeText(getActivity(), "Check name, photo, location", Toast.LENGTH_SHORT).show();
 		}
 	}
 	
 	public boolean isPlaceValid() {
+		
+		//TODO:
+		Toast.makeText(getActivity(), "USING FAKE LOCATION", Toast.LENGTH_LONG).show();
+		
 		return ((name != null) &&
 				(!name.isEmpty()) &&
-				(latitude > Double.MIN_VALUE) &&
-				(longitude > Double.MIN_VALUE) &&
+				//(latitude > Double.MIN_VALUE) &&
+				//(longitude > Double.MIN_VALUE) &&
 				(photoUri != null) &&
 				(!photoUri.isEmpty()));
 	}

@@ -1,5 +1,6 @@
 package de.tud.mobsen.invite2meet;
 
+import de.tud.mobsen.invite2meet.db.PlacesDbHelper;
 import de.tud.mobsen.invite2meet.when.FragmentWhen;
 import de.tud.mobsen.invite2meet.where.FragmentWhere;
 import de.tud.mobsen.invite2meet.who.FragmentWho;
@@ -10,6 +11,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.app.ActionBar.Tab;
+import android.database.sqlite.SQLiteDatabase;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -32,7 +34,7 @@ public class MainActivity extends Activity {
 		// add two new tabs
 		addTab("Who?", new FragmentWho());
 		addTab("When?", new FragmentWhen());
-		addTab("Where?", new FragmentWhere());
+		addTab("Where?", new FragmentWhere());	
 		
 		//Set settings
 		PreferenceManager.setDefaultValues(this, R.xml.settings, false);

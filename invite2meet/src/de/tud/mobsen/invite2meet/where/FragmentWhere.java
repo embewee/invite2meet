@@ -13,16 +13,21 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
 public class FragmentWhere extends Fragment {
 	
+	private final static String tag = "FragmentWhere";
+	
 	private PlacesListViewAdapter placesListViewAdapter;
-	ProgressDialog progressDialog;
+	private ProgressDialog progressDialog;
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View fragView = inflater.inflate(R.layout.fragment_where, container, false);
@@ -31,6 +36,24 @@ public class FragmentWhere extends Fragment {
 		placesListViewAdapter = new PlacesListViewAdapter(getActivity(), friendsListView, new LinkedList<Place>()); 		
 		friendsListView.setAdapter(placesListViewAdapter);
 		getPlaces();
+		
+		Button btn = (Button) fragView.findViewById(R.id.fragwhere_button);
+		btn.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				PlacesDbHelper databaseHelper = new PlacesDbHelper(getActivity());
+				SQLiteDatabase database = databaseHelper.getReadableDatabase();
+				
+				/** @author based on: wsn, http://stackoverflow.com/questions/1601151/how-do-i-check-in-sqlite-whether-a-table-exists (Stephen Quan)*/
+				Cursor cEmpty = database.rawQuery("SELECT COUNT(*) FROM " + PlacesDbHelper.TABLE_NAME, null);
+				if(cEmpty.moveToFirst()) {
+					int entries = cEmpty.getInt(0);
+					Log.i(tag, "ENTRIES: " + Integer.toString(entries));
+				}
+				cEmpty.close();
+				database.close();
+			}
+		});
 		
 		return fragView;
 	}
@@ -67,11 +90,15 @@ public class FragmentWhere extends Fragment {
 				Cursor c = database.query(PlacesDbHelper.TABLE_NAME, columns, null, null, PlacesDbHelper.KEY_TIMES_USED, null, null);
 	
 				int rows = c.getCount();
+				Log.i(tag, "ROWS COUNT=" + rows);
 				
 				// iterate over returned values.				
 				c.moveToFirst();
 				for (int index = 0; index < c.getCount(); index++) {
 					Place p = new Place(c.getInt(0), c.getString(1), c.getString(2), c.getString(3), c.getDouble(4), c.getDouble(5), c.getInt(6));
+					
+					Log.i(tag, "NEW PLACE: " + p.getDisplayText());
+					
 					places.add(p);
 					c.moveToNext();
 				}

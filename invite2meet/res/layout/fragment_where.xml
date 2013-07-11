@@ -4,10 +4,18 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
+    <Button
+        android:id="@+id/fragwhere_button"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Function" />
+
     <ListView
         android:id="@+id/fragwhere_listview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
     </ListView>
+
 	            
 </LinearLayout>
