@@ -9,6 +9,9 @@ import android.util.Log;
  * @author based on: wsn, WiFun5
  */
 public class PlacesDbHelper extends SQLiteOpenHelper {
+	
+	private final static String tag = "PlacesDbHelper";
+	
 	public static final int DATABASE_VERSION = 1;
 	public static final String DATABASE_NAME = "invite2meet";
 	public static final String TABLE_NAME = "places";
@@ -29,14 +32,14 @@ public class PlacesDbHelper extends SQLiteOpenHelper {
 	public PlacesDbHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 		
-		Log.i("PlacesDbHelper", "PlacesDbHelper instantiated");
+		Log.i(tag, "PlacesDbHelper instantiated");
 	}
 
 	public void onCreate(SQLiteDatabase db) {
+		Log.i(tag, "onCreate called");
+		
 		db.execSQL(CREATE_TABLE_SQL);
-		
-		Log.i("PlacesDbHelper", "CREATING SQL TABLE: " + TABLE_NAME);
-		
+		db.execSQL(FriendsDbHelper.CREATE_TABLE_SQL);
 	}
 	
 	@Override

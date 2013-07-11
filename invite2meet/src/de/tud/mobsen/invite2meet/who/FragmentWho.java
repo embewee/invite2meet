@@ -3,11 +3,13 @@ package de.tud.mobsen.invite2meet.who;
 import java.util.LinkedList;
 import java.util.List;
 
+import de.tud.mobsen.invite2meet.MainActivity;
 import de.tud.mobsen.invite2meet.R;
 import de.tud.mobsen.invite2meet.db.FriendsDbHelper;
 import de.tud.mobsen.invite2meet.objects.Friend;
 import de.tud.mobsen.invite2meet.objects.FriendsListViewAdapter;
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -16,15 +18,16 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.Toast;
 
 public class FragmentWho extends Fragment {
 	
-	ProgressDialog progressDialog;
-	
-	ListView listView;
-	FriendsListViewAdapter friendsListViewAdapter; 
+	private ProgressDialog progressDialog;
+	private ListView listView;
+	private FriendsListViewAdapter friendsListViewAdapter; 
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View fragView = inflater.inflate(R.layout.fragment_who, container, false);
@@ -32,6 +35,12 @@ public class FragmentWho extends Fragment {
 		listView = (ListView) fragView.findViewById(R.id.fragwho_listview);
 		friendsListViewAdapter = new FriendsListViewAdapter(getActivity(), listView, new LinkedList<Friend>()); 		
 		listView.setAdapter(friendsListViewAdapter);
+		listView.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+				onItemClicked(position);
+			}
+		});
 		loadFriends();
 		
 		return fragView;
@@ -42,6 +51,15 @@ public class FragmentWho extends Fragment {
 		new LoadFriendsDatabase().execute();
 	}
 	
+	private void onItemClicked(int position) {
+		MainActivity ma = (MainActivity) getActivity();
+		ma.inviteNew();
+		
+		Friend friend = (Friend) friendsListViewAdapter.getItem(position);
+		ma.inviteSetWho(friend.getName());
+		
+		ma.setWhenActive();	
+	}
 	
 	
 	/**
@@ -91,5 +109,4 @@ public class FragmentWho extends Fragment {
 			Toast.makeText(getActivity(), list.size() + " records loaded", Toast.LENGTH_SHORT).show();
 		}
 	}
-	
 }

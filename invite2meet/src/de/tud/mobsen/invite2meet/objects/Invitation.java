@@ -1,25 +1,32 @@
 package de.tud.mobsen.invite2meet.objects;
 
-import java.security.Timestamp;
-
-import android.graphics.Picture;
-import android.location.Location;
+import android.graphics.Bitmap;
 
 public class Invitation {
 
 	private String inviterName;
-	private Location inviterLocation;
-
-	private Timestamp creationTime;
+	//private Location inviterLocation;
+	private double inviterLatitude;
+	private double inviterLongitude;
+	
+	private long sendingTime;
 
 	private String inviteeName;
 
 	private int meetingOffsetMinutes;
 	private String meetingPlaceName;
-	private Location meetingPlaceLocation;
-	private Picture meetingPlaceImage;
+	//private Location meetingPlaceLocation;
+	private double meetingPlaceLatitude;
+	private double meetingPlaceLongitude;
+	private Bitmap meetingPlaceImage;
 
 	public Invitation() {
+		inviterLatitude = Double.MIN_VALUE;
+		inviterLongitude = Double.MIN_VALUE;
+		meetingPlaceLatitude = Double.MIN_VALUE;
+		meetingPlaceLongitude = Double.MIN_VALUE;
+		
+		sendingTime = Long.MIN_VALUE;
 		meetingOffsetMinutes = -1;
 	}
 
@@ -31,20 +38,12 @@ public class Invitation {
 		this.inviterName = inviterName;
 	}
 
-	public Location getInviterLocation() {
-		return inviterLocation;
+	public long getSendingTime() {
+		return sendingTime;
 	}
 
-	public void setInviterLocation(Location inviterLocation) {
-		this.inviterLocation = inviterLocation;
-	}
-
-	public Timestamp getCreationTime() {
-		return creationTime;
-	}
-
-	public void setCreationTime(Timestamp creationTime) {
-		this.creationTime = creationTime;
+	public void setSendingTime(long creationTime) {
+		this.sendingTime = creationTime;
 	}
 
 	public String getInviteeName() {
@@ -71,29 +70,70 @@ public class Invitation {
 		this.meetingPlaceName = meetingPlaceName;
 	}
 
-	public Location getMeetingPlaceLocation() {
-		return meetingPlaceLocation;
-	}
-
-	public void setMeetingPlaceLocation(Location meetingPlaceLocation) {
-		this.meetingPlaceLocation = meetingPlaceLocation;
-	}
-
-	public Picture getMeetingPlaceImage() {
+	public Bitmap getMeetingPlaceImage() {
 		return meetingPlaceImage;
 	}
 
-	public void setMeetingPlaceImage(Picture meetingPlaceImage) {
+	public void setMeetingPlaceImage(Bitmap meetingPlaceImage) {
 		this.meetingPlaceImage = meetingPlaceImage;
+	}
+	
+	public double getInviterLatitude() {
+		return inviterLatitude;
+	}
+
+	public void setInviterLatitude(double inviterLatitude) {
+		this.inviterLatitude = inviterLatitude;
+	}
+
+	public double getInviterLongitude() {
+		return inviterLongitude;
+	}
+
+	public void setInviterLongitude(double inviterLongitude) {
+		this.inviterLongitude = inviterLongitude;
+	}
+
+	public double getMeetingPlaceLatitude() {
+		return meetingPlaceLatitude;
+	}
+
+	public void setMeetingPlaceLatitude(double meetingPlaceLatitude) {
+		this.meetingPlaceLatitude = meetingPlaceLatitude;
+	}
+
+	public double getMeetingPlaceLongitude() {
+		return meetingPlaceLongitude;
+	}
+
+	public void setMeetingPlaceLongitude(double meetingPlaceLongitude) {
+		this.meetingPlaceLongitude = meetingPlaceLongitude;
 	}
 
 	public boolean isValid() {
-		boolean valid = (inviterName != null) && (inviterLocation != null)
-				&& (creationTime != null) && (inviteeName != null)
+		boolean valid = (inviterName != null) 
+				&& (inviterLatitude > Double.MIN_VALUE)
+				&& (inviterLongitude > Double.MIN_VALUE)
+				&& (sendingTime > Long.MIN_VALUE) && (inviteeName != null)
 				&& (meetingOffsetMinutes >= 0) && (meetingPlaceName != null)
-				&& (meetingPlaceLocation != null)
+				&& (meetingPlaceLatitude > Double.MIN_VALUE)
+				&& (meetingPlaceLongitude > Double.MIN_VALUE)
 				&& (meetingPlaceImage != null);
 		return valid;
 	}
 
+	@Override
+	public String toString() {
+		return "Invitation [inviterName=" + inviterName + ", inviterLatitude="
+				+ inviterLatitude + ", inviterLongitude=" + inviterLongitude
+				+ ", sendingTime=" + sendingTime + ", inviteeName="
+				+ inviteeName + ", meetingOffsetMinutes="
+				+ meetingOffsetMinutes + ", meetingPlaceName="
+				+ meetingPlaceName + ", meetingPlaceLatitude="
+				+ meetingPlaceLatitude + ", meetingPlaceLongitude="
+				+ meetingPlaceLongitude + ", meetingPlaceImage="
+				+ meetingPlaceImage + "]";
+	}
+
+	
 }

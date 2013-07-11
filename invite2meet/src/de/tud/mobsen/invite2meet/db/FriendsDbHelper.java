@@ -1,14 +1,16 @@
 package de.tud.mobsen.invite2meet.db;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 /**
  * @author based on: wsn, WiFun5
  */
 public class FriendsDbHelper extends SQLiteOpenHelper {
+	private final static String tag = "FriendsDbHelper";
+	
 	public static final int DATABASE_VERSION = 1;
 	public static final String DATABASE_NAME = "invite2meet";
 	public static final String TABLE_NAME = "friends";
@@ -24,7 +26,9 @@ public class FriendsDbHelper extends SQLiteOpenHelper {
 	}
 
 	public void onCreate(SQLiteDatabase db) {
+		Log.i(tag, "onCreate called");
 		db.execSQL(CREATE_TABLE_SQL);
+		db.execSQL(PlacesDbHelper.CREATE_TABLE_SQL);
 	}
 	
 	@Override

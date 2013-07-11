@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.tud.mobsen.invite2meet.ChooseFragment;
+import de.tud.mobsen.invite2meet.MainActivity;
 import de.tud.mobsen.invite2meet.R;
 import de.tud.mobsen.invite2meet.objects.When;
 import de.tud.mobsen.invite2meet.objects.WhenListViewAdapter;
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -43,23 +45,29 @@ public class FragmentWhen extends Fragment {
 	private List<When> getWhens() {
 		//TODO
 		ArrayList<When> whens = new ArrayList<When>();
-		whens.add(new When("now", "Now!"));
-		whens.add(new When("five", "5 Min"));
-		whens.add(new When("ten", "10 Min"));
-		whens.add(new When("fifteen", "15 Min"));
-		whens.add(new When("twenty", "20 Min"));
-		whens.add(new When("thirty", "30 Min"));
-		whens.add(new When("choose", "Choose..."));
+		whens.add(new When("now", "Now!", 0));
+		whens.add(new When("five", "5 Min", 5));
+		whens.add(new When("ten", "10 Min", 10));
+		whens.add(new When("fifteen", "15 Min", 15));
+		whens.add(new When("twenty", "20 Min", 20));
+		whens.add(new When("thirty", "30 Min", 30));
+		//TODO:
+		//whens.add(new When("choose", "Choose..."));
 		return whens;		
 	}
 	
 	private void onItemClicked(int position) {
-		When w = (When) whenListViewAdapter.getItem(position);
-		Log.i(tag, w.getDisplayText());
+		MainActivity ma = (MainActivity) getActivity();
 		
-		if(w.getKey().equals("choose")) {
-			ChooseFragment fragChoose = new ChooseFragment();
-			fragChoose.show(getActivity().getFragmentManager(), SHOW_CHOOSE_DIALOG);
-		}
+		When w = (When) whenListViewAdapter.getItem(position);
+		ma.inviteSetWhen(w.getOffsetInMinutes());
+		
+		//TODO:
+//		if(w.getKey().equals("choose")) {
+//			ChooseFragment fragChoose = new ChooseFragment();
+//			fragChoose.show(getActivity().getFragmentManager(), SHOW_CHOOSE_DIALOG);
+//		}
+		
+		ma.setWhereActive();
 	}
 }

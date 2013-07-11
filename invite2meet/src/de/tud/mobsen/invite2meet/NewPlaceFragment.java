@@ -14,6 +14,7 @@ import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -284,7 +285,6 @@ public class NewPlaceFragment extends DialogFragment {
 		protected String doInBackground(Void... arg0) {
 			PlacesDbHelper databaseHelper = new PlacesDbHelper(getActivity());
 			SQLiteDatabase database = databaseHelper.getWritableDatabase();
-
 			ContentValues values = new ContentValues();
 			values.put(PlacesDbHelper.KEY_NAME, name);
 			values.put(PlacesDbHelper.KEY_TIMESTAMP, timestamp);
@@ -292,9 +292,16 @@ public class NewPlaceFragment extends DialogFragment {
 			values.put(PlacesDbHelper.KEY_PHOTO_URI, photoUri);
 			values.put(PlacesDbHelper.KEY_LONGITUDE, longitude);
 			values.put(PlacesDbHelper.KEY_LATITUDE, latitude);
+			
 			long rowId = database.insert(PlacesDbHelper.TABLE_NAME, null, values);
 
 			Log.i(tag, "RowId: " + Long.toString(rowId));
+			
+			
+			Cursor tmp = database.rawQuery("SELECT COUNT(*) FROM " + PlacesDbHelper.TABLE_NAME, null);
+			Log.i(tag, "COUNT NACH EINFUEGEN: " + tmp.getCount());
+			
+			
 			
 			database.close();
 			
